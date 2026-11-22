@@ -125,6 +125,9 @@ window.WEDDING_CONFIG = {
     autoplay: true,
     loop: true,
     loopDelay: 1.5,
+    // Làm chậm chữ + các cảnh từ cảnh 2 trở đi (cảnh 1 giữ nguyên để khớp giọng thoại).
+    // 1 = tốc độ gốc, 1.4 = chậm hơn 40%, 1.7 = chậm hơn nữa. Tăng nếu vẫn thấy nhanh.
+    slow: 3,
     // Nhạc nền: đặt bài hát của bạn vào thư mục audio/ rồi điền đường dẫn, vd 'audio/bai-hat.mp3'
     // (hoặc một link https://). Muốn dùng nguyên âm thanh gốc của video: 'audio/original-full.mp3'
     music: "audio/noi_gio_len.mp3",

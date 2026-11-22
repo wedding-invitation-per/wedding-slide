@@ -10,7 +10,13 @@
   const CFG = window.WEDDING_CONFIG;
   const TX = CFG.text;
   const stage = document.getElementById('stage');
-  const DURATION = 75.2;
+  const DURATION = 75.2;   // thời lượng gốc (thời gian "nội bộ" của các cảnh)
+  /* Làm chậm từ cảnh 2 trở đi: SLOW = 1.4 nghĩa là chữ gõ và mọi cảnh chạy chậm 1.4 lần.
+     Cảnh 1 (giọng thoại + nhạc) giữ nguyên. Chỉnh trong config.js: playback.slow */
+  const SLOW = Math.max(1, (CFG.playback && CFG.playback.slow) || 1.4);
+  const SLOW_FROM = 13.0;
+  const mapT = (t) => (t <= SLOW_FROM ? t : SLOW_FROM + (t - SLOW_FROM) / SLOW);
+  const TOTAL = SLOW_FROM + (DURATION - SLOW_FROM) * SLOW;   // thời lượng thực tế sau khi làm chậm
 
   /* fonts */
   const fontJobs = [
@@ -646,7 +652,8 @@
   }
 
   /* render */
-  function render(t) {
+  function render(tReal) {
+    const t = mapT(tReal);
     for (const a of tracks) a.currentTime = t * 1000;
     for (const sc of scenes) {
       const vis = t >= sc.start - 0.02 && t <= sc.end + 0.02;
@@ -668,7 +675,7 @@
   /* player / UI */
   const state = { t: 0, playing: !!CFG.playback.autoplay, last: 0 };
   const params = new URLSearchParams(location.search);
-  if (params.has('t')) state.t = clamp(parseFloat(params.get('t')) || 0, 0, DURATION);
+  if (params.has('t')) state.t = clamp(parseFloat(params.get('t')) || 0, 0, TOTAL);
   if (params.get('paused') === '1') state.playing = false;
 
   const fmt = (v) => `${Math.floor(v / 60)}:${String(Math.floor(v % 60)).padStart(2, '0')}`;
@@ -740,7 +747,7 @@
     syncAudio();
   }
   function seekTo(t) {
-    state.t = clamp(t, 0, DURATION);
+    state.t = clamp(t, 0, TOTAL);
     render(state.t);
     syncAudio();
   }
@@ -769,12 +776,12 @@
       voices.forEach((v) => {
         if (prev < v.at && state.t >= v.at) { try { v.a.currentTime = 0; } catch (e) {} v.a.play().catch(() => {}); }
       });
-      if (state.t >= DURATION + (CFG.playback.loopDelay || 0)) {
+      if (state.t >= TOTAL + (CFG.playback.loopDelay || 0)) {
         if (CFG.playback.loop) { state.t = 0; syncAudio(); }
-        else { state.t = DURATION; setPlaying(false); }
+        else { state.t = TOTAL; setPlaying(false); }
       }
     }
-    render(Math.min(state.t, DURATION));
+    render(Math.min(state.t, TOTAL));
     requestAnimationFrame(frame);
   }
 

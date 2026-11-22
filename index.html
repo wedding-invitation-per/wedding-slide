@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slide cưới tone đỏ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Alfa+Slab+One&family=Bodoni+Moda:wght@400;500&family=Lora:wght@400;500;600;700&family=Playball&family=Playfair+Display:wght@500;600;700&display=swap&subset=vietnamese">
+  <!-- Font Hán cho chữ 囍 (chỉ tải đúng 1 ký tự, rất nhẹ) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@900&text=%E5%9B%8D">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="viewport">
+    <div id="stage"></div>
+  </div>
+
+  <!-- Thanh điều khiển (tự ẩn khi không di chuột) -->
+  <div id="ui" class="hide">
+    <button id="btnPlay" title="Phát / Tạm dừng (Space)">❚❚</button>
+    <button id="btnRestart" title="Chạy lại (R)">↺</button>
+    <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Tua">
+    <span id="time">0:00 / 0:00</span>
+    <button id="btnFs" title="Toàn màn hình (F)">⛶</button>
+  </div>
+
+  <div id="loading">Đang tải font…</div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -121,6 +121,11 @@ window.WEDDING_CONFIG = {
   // Lắc lư nhẹ của cô dâu chú rể: deg = biên độ (độ), period = chu kỳ (giây). deg: 0 để tắt.
   cutoutSway: { deg: 1.6, period: 1.7 },
 
+  // Phóng to ẢNH bên trong chữ LOVE (cảnh cuối) quanh đúng tâm chữ. 1 = như cũ, 1.3 = to hơn 30%, 1.6 = to hơn 60%.
+  loveImageScale: 2,
+  // Nhích ảnh trong chữ LOVE lên trên (px). 40 = nhích lên một ít; tăng nếu cần lên nữa, số âm = xuống.
+  loveImageShiftY: 130,
+
   playback: {
     autoplay: true,
     loop: true,

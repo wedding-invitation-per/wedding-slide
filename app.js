@@ -628,6 +628,11 @@
       const lc = CFG.images.love, fo = (lc && lc.focus ? String(lc.focus) : '50% 50%').match(/(-?[\d.]+)%\s+(-?[\d.]+)%/);
       const fx = fo ? clamp(parseFloat(fo[1]) / 100, 0, 1) : 0.5, fy = fo ? clamp(parseFloat(fo[2]) / 100, 0, 1) : 0.5;
       const imgEl = wrap.querySelector('image'), probe = new Image();
+      /* phóng to ẢNH bên trong chữ LOVE quanh đúng tâm của chữ (chữ giữ nguyên, phần ảnh tràn ra ngoài chữ bị cắt).
+         Chỉnh trong config.js: loveImageScale (1 = như cũ, 1.3 = ảnh to hơn 30%) */
+      const IS = Math.max(1, CFG.loveImageScale || 1.3);
+      const SY = CFG.loveImageShiftY != null ? CFG.loveImageShiftY : 40;   // nhích ảnh LÊN bấy nhiêu px (số âm = xuống)
+      imgEl.setAttribute('transform', `translate(0 ${-SY}) translate(${LW / 2} ${LH / 2}) scale(${IS}) translate(${-LW / 2} ${-LH / 2})`);
       probe.onload = () => {
         const k = Math.max(LW / probe.naturalWidth, LH / probe.naturalHeight);
         const w = probe.naturalWidth * k, h = probe.naturalHeight * k;

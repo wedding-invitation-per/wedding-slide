@@ -1,31 +1,32 @@
 window.WEDDING_CONFIG = {
-  cloudinary: {
-    cloudName: 'YOUR_CLOUD_NAME',
-    transform: 'f_auto,q_auto',
-  },
+  /* Thư mục chứa ảnh. Bỏ ảnh vào đây rồi ghi tên file bên dưới. */
+  imagesDir: 'images/',
 
+  /* Mỗi ảnh: tên file trong images/ (vd 'anh1.jpg'), hoặc null = để ô phông xanh.
+     Muốn chỉnh vùng giữ lại khi cắt khung: viết dạng { src: 'anh1.jpg', focus: '50% 20%' } */
   images: {
-    collageCutout: { id: null, url: null }, // Cảnh 1: nửa người + bó hoa
-    saveCutout:    { id: null, url: null }, // Cảnh 2: toàn thân
-    storyBanner:   { id: null, url: null }, // Cảnh 4: ảnh ngang trên
-    storyCutout:   { id: null, url: null }, // Cảnh 4: người cắt nền
-    gallery1:      { id: null, url: null }, // Cảnh 5: 3 ảnh dọc
-    gallery2:      { id: null, url: null },
-    gallery3:      { id: null, url: null },
-    finally:       { id: null, url: null }, // Cảnh 6: full màn hình
-    pairTall:      { id: null, url: null }, // Cảnh 7
-    pairWide:      { id: null, url: null },
-    gratitude:     { id: null, url: null }, // Cảnh 8: dọc bên phải
-    promise:       { id: null, url: null }, // Cảnh 9: dọc bên trái
-    thanksPhoto:   { id: null, url: null }, // Cảnh 10: dọc bên trái
-    love:          { id: null, url: null }, // Cảnh 12: ngang trong chữ LOVE
-    // Thêm focus: '50% 20%' vào bất kỳ ảnh nào để chỉnh vùng giữ lại khi cắt khung
+    collageCutout: "AC_01_no_background.png", // Cảnh 1: nửa người + bó hoa (PNG nền trong suốt)
+    saveCutout:    "AC_02_no_background.png", // Cảnh 2: toàn thân (PNG nền trong suốt)
+    storyCutout:   "AC_05_no_background.png", // Cảnh 4: người cắt nền (PNG nền trong suốt)
+    gallery1:      "AC_06.jpg", // Cảnh 5: 3 ảnh dọc
+    gallery2:      "AC_08.jpg",
+    gallery3:      "AC_07.jpg",
+    /* Cảnh 6: full màn hình, phủ kín khung (không blur). focus: số thứ hai nhỏ = lấy phần trên ảnh (ảnh như dịch xuống), lớn = lấy phần dưới. */
+    finally:       { src: "AC_10.jpg", focus: "50% 30%" },
+    pairTall:      "AC_03.jpg", // Cảnh 7
+    /* Cảnh 7: ảnh ngang phía trên chữ. focus: số thứ hai nhỏ = lấy phần trên ảnh (ảnh như dịch xuống, thấy mặt), lớn = lấy phần dưới. */
+    pairWide:      { src: "AC_04.jpg", focus: "50% 15%" },
+    gratitude:     "AC_01_no_background.png", // Cảnh 8: dọc bên phải
+    promise:       "AC_05.jpg", // Cảnh 9: dọc bên trái
+    thanksPhoto:   "AC_10.jpg", // Cảnh 10: dọc bên trái
+    /* Cảnh 12: ngang trong chữ LOVE. focus: số thứ hai nhỏ = lấy phần trên ảnh (ảnh như dịch xuống), lớn = lấy phần dưới. */
+    love:          { src: "AC_09.jpg", focus: "50% 30%" },
   },
 
   text: {
     groom: 'Vũ Mạnh',
     bride: 'Ngọc Ánh',
-    date: '03.05.2027',
+    date: '13.12.2026',
 
     comments: {
       q1: '“ Rửa bát ai làm?”',
@@ -125,11 +126,13 @@ window.WEDDING_CONFIG = {
     loop: true,
     loopDelay: 1.5,
     // Nhạc nền: đặt bài hát của bạn vào thư mục audio/ rồi điền đường dẫn, vd 'audio/bai-hat.mp3'
-    // (hoặc link Cloudinary). Muốn dùng nguyên âm thanh gốc của video: 'audio/original-full.mp3'
-    music: null,
+    // (hoặc một link https://). Muốn dùng nguyên âm thanh gốc của video: 'audio/original-full.mp3'
+    music: "audio/noi_gio_len.mp3",
     musicVolume: 0.6,    // âm lượng tối đa của bài hát (0–1)
-    musicStart: 11.4,    // bài hát bắt đầu mở đúng lúc voice "Em làm" xuất hiện (giây)
-    musicFadeIn: 6,      // nhỏ → to dần trong 6 giây
+    musicStart: 11.4,    // (dự phòng) giây bắt đầu mở nhạc, nếu không dùng musicFadeWithVoice
+    musicFadeIn: 6,      // (dự phòng) nhỏ → to dần trong 6 giây, nếu không đọc được độ dài giọng thoại
+    musicFadeWithVoice: 9, // nhạc vào ĐÚNG lúc giọng thứ 9 (09-em-lam, đếm từ 0) bắt đầu, nhỏ → to dần HẾT giọng đó rồi về âm lượng chuẩn
+    musicFadeFrom: 0.1,  // âm lượng lúc mới vào = 10% âm lượng chuẩn (0 = từ im lặng)
     musicFrom: 0,        // muốn bỏ qua đoạn đầu bài hát thì tăng số này (giây)
 
     // Giọng thoại ở cảnh 1, phát đúng mốc giây (at). Chỉnh `at` nếu muốn lệch sớm/muộn.

@@ -1,4 +1,4 @@
-/* Slide cưới tone đỏ – sân khấu thiết kế 1920×1080, tự scale vừa màn hình. */
+/* Vũ Mạnh & Ngọc Ánh – sân khấu thiết kế 1920×1080, tự scale vừa màn hình. */
 :root{
   --red-deep:#6a0a0d;
   --red-bg1:#5b1517;
@@ -39,6 +39,8 @@ body{font-family:'Lora',serif;-webkit-font-smoothing:antialiased}
 /* Photo slots */
 .slot{position:absolute;overflow:hidden}
 .slot img{width:100%;height:100%;object-fit:cover;display:block}
+.slot img.fx{position:absolute;left:0;top:0}
+.slot img.bgblur{position:absolute;left:-8%;top:-8%;width:116%;height:116%;object-fit:cover;filter:blur(26px) brightness(.85)}
 .slot.ph{
   background:var(--chroma);
   display:flex;align-items:center;justify-content:center;text-align:center;
@@ -119,19 +121,6 @@ body{font-family:'Lora',serif;-webkit-font-smoothing:antialiased}
 /* Cảnh 12 */
 .love-wrap{position:absolute;overflow:visible}
 
-/* UI */
-#ui{
-  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-  display:flex;align-items:center;gap:12px;padding:8px 14px;border-radius:999px;
-  background:rgba(20,10,10,.72);backdrop-filter:blur(6px);color:#fff;
-  font:500 13px/1 system-ui,sans-serif;transition:opacity .3s;z-index:10;
-  width:min(720px,calc(100vw - 24px));
-}
-#ui.hide{opacity:0;pointer-events:none}
-#ui button{background:none;border:0;color:#fff;font-size:17px;cursor:pointer;width:30px;height:30px;border-radius:50%}
-#ui button:hover{background:rgba(255,255,255,.15)}
-#ui input[type=range]{flex:1;accent-color:#e04650}
-#time{min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
 #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#caa;font:15px system-ui,sans-serif;z-index:20;transition:opacity .4s}
 #loading.done{opacity:0;pointer-events:none}
 body.cursor-hide{cursor:none}

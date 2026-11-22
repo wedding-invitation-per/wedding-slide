@@ -1,4 +1,4 @@
-# Slide cưới tone đỏ
+# Vũ Mạnh & Ngọc Ánh
 
 Site tĩnh (HTML/CSS/JS), không cần build.
 
@@ -18,5 +18,5 @@ Framework Preset: **Other**. Build Command và Output Directory để trống
 **Root Directory** = `wedding-slide`.
 
 ## Tuỳ chỉnh
-Sửa mọi thứ trong `config.js`: cloudName + ảnh Cloudinary, tên, nhạc, giọng thoại.
+Chép ảnh vào thư mục `images/`, rồi sửa `config.js`: tên file ảnh (vd `gallery1: 'anh1.jpg'`), tên, nhạc, giọng thoại. Không còn dùng Cloudinary.
 Tua nhanh để kiểm tra: `/?t=33.5&paused=1`

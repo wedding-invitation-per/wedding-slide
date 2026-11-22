@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Slide cưới tone đỏ – engine + các cảnh
+   Vũ Mạnh & Ngọc Ánh – engine + các cảnh
    - Mọi chuyển động chạy theo MỘT đồng hồ chung (t, giây) nên tua chính xác:
      ?t=33.5  (và &paused=1 để dừng tại đó).
    - Toạ độ dùng hệ 1920×1080.
@@ -54,16 +54,14 @@
     return el('div', cls, Object.assign({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }, extra), parent);
   }
 
-  /* Cloudinary URL */
+  /* Đường dẫn ảnh: tên file trong thư mục images/ (vd 'anh1.jpg'), đường dẫn ('img/a.png') hoặc URL https://... */
   function imgUrl(key, w) {
     const c = CFG.images[key];
     if (!c) return null;
-    if (c.url) return c.url;
-    if (!c.id) return null;
-    const cl = CFG.cloudinary;
-    const parts = [cl.transform || 'f_auto,q_auto'];
-    if (w) parts.push('c_limit,w_' + Math.round(Math.min(3000, w * 1.6)));
-    return `https://res.cloudinary.com/${cl.cloudName}/image/upload/${parts.join(',')}/${c.id}`;
+    const v = typeof c === 'string' ? c : (c.src || c.url || c.file);
+    if (!v) return null;
+    if (/^(https?:)?\/\//.test(v) || /^(data:|blob:)/.test(v) || v.includes('/')) return v;
+    return (CFG.imagesDir || 'images/') + v;
   }
 
   const LABELS = {
@@ -92,7 +90,17 @@
       im.alt = '';
       im.decoding = 'async';
       im.src = url;
-      if (CFG.images[key].focus) im.style.objectPosition = CFG.images[key].focus;
+      const c = CFG.images[key];
+      if (c.focus) im.style.objectPosition = c.focus;  // chỉ dùng khi ảnh khai báo dạng { src, focus, ... }
+      const sc = c.scale != null ? c.scale : 1, dx = c.dx || 0, dy = c.dy || 0;
+      if (sc !== 1 || dx || dy) {
+        /* thu nhỏ / dịch ảnh BÊN TRONG khung (khung giữ nguyên); phần trống được lấp bằng chính ảnh đó làm mờ */
+        const bg = new Image();
+        bg.alt = ''; bg.src = url; bg.className = 'bgblur';
+        d.appendChild(bg);
+        im.classList.add('fx');
+        im.style.transform = `translate(${dx}px,${dy}px) scale(${sc})`;
+      }
       d.appendChild(im);
     } else {
       d.classList.add('ph');
@@ -330,7 +338,8 @@
     const p1 = box(s, 'pill p1', 1520, 578, 215, 54, { zIndex: 3 }); p1.textContent = '“ HÔM NAY';
     const p2 = box(s, 'pill p2', 1432, 640, 395, 76, { zIndex: 3 }); p2.textContent = 'CHÚNG MÌNH CƯỚI!!';
 
-    const cut = cutoutSlot(s, 'collageCutout', 650, 120, 760, 730, 'half');
+    /* phóng to ~1.18× quanh tâm cũ; đáy (y=861) vẫn nằm trên mép giấy xám phía trước để chân không lộ ra nền đỏ */
+    const cut = cutoutSlot(s, 'collageCutout', 582, 0, 897, 861, 'half');
     cut.style.zIndex = 5;
 
     fadeIn(cut, 0, 0.55);
@@ -432,22 +441,19 @@
   {
     const s = scene('story', 27.7, 34.9, { z: 4 });
     el('div', 'bg', { background: 'var(--red-story)' }, s);
-    xi(s, 30, 560, 900, 640, 'rgba(255,255,255,.06)');
-    const ban = photoSlot(s, 'storyBanner', 0, 0, 1920, 520);
-    ban.style.zIndex = 1;                       // ảnh ngang nằm SAU cô dâu chú rể
-    const cut = cutoutSlot(s, 'storyCutout', 70, 410, 650, 680, 'half');
+    xi(s, 0, 200, 1000, 880, 'rgba(255,255,255,.06)');
+    /* cô dâu chú rể cùng cỡ với cảnh 2 (950×1010), đáy chạm mép dưới khung; chữ dịch sang phải cho cân */
+    const cut = cutoutSlot(s, 'storyCutout', 0, 70, 950, 1010, 'full');
     cut.style.zIndex = 5;
-    const ttl = fit(s, TX.story.title, { cx: 1307, cy: 645, w: 720, cls: 'script', color: '#f7e7e1' });
+    const ttl = fit(s, TX.story.title, { cx: 1445, cy: 385, w: 640, cls: 'script', color: '#f7e7e1' });
     const body = text(s, TX.story.lines, {
-      x: 739, y: 787 - 37, w: 1170, align: 'left', lh: 74, ls: 0.03, color: '#f6e6df', weight: 600,
-      fitLine: [2, 1165], start: 28.8, cps: 34,
+      x: 990, y: 487, w: 910, align: 'left', lh: 74, ls: 0.03, color: '#f6e6df', weight: 600,
+      fitLine: [2, 905], start: 28.8, cps: 34,
     });
     fadeIn(s, 27.7, 0.6, { ease: E.lin });
-    fadeIn(ban, 27.9, 0.5, { ease: E.lin });
     anim(cut, [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }], 28.25, 0.6);
     wipeX(ttl, 28.35, 0.7);
     sway(cut, 28.85, 34.9);
-    fadeOut(ban, 34.2, 0.5, { ease: E.lin });
     fadeOut(cut, 34.2, 0.5, { ease: E.lin });
     fadeOut(ttl, 34.2, 0.45, { ease: E.lin });
     fadeOut(body, 34.45, 0.4, { ease: E.lin });
@@ -479,7 +485,7 @@
     const s = scene('finally', 38.9, 44.2, { z: 6 });
     anim(s, [{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], 38.9, 1.0, { ease: E.io });
     const ph = photoSlot(s, 'finally', 0, 0, 1920, 1080);
-    anim(ph, [{ transform: 'scale(1)' }, { transform: 'scale(1.07)' }], 38.9, 5.3, { ease: E.lin });
+    /* đã bỏ hiệu ứng phóng to chậm (scale 1→1.07) để ảnh không bị cắt thêm, thấy nhiều khung cảnh nhất */
     el('div', 'abs', { inset: '0', background: 'linear-gradient(to top,rgba(40,0,0,.35),transparent 35%)', pointerEvents: 'none' }, s);
     const fw = fit(s, TX.finally.script, { cx: 266, cy: 915, w: 430, cls: 'script', color: '#fff' });
     fw.style.textShadow = '0 2px 10px rgba(60,0,0,.35)';
@@ -610,6 +616,21 @@
     wrap.innerHTML = `<svg viewBox="0 0 ${LW} ${LH}" width="${LW}" height="${LH}" overflow="visible">
       <defs><clipPath id="loveClip"><text x="0" y="${LH}" font-family="Alfa Slab One" font-size="${lfs}" textLength="${LW}" lengthAdjust="spacingAndGlyphs">LOVE</text></clipPath></defs>
       <g clip-path="url(#loveClip)">${fill}</g></svg>`;
+    /* focus (nếu có) cho ảnh trong chữ LOVE: ảnh vẫn phủ kín chữ, chỉ chọn lấy phần nào của ảnh.
+       Số thứ hai nhỏ = lấy phần trên ảnh (ảnh như dịch xuống). */
+    if (url) {
+      const lc = CFG.images.love, fo = (lc && lc.focus ? String(lc.focus) : '50% 50%').match(/(-?[\d.]+)%\s+(-?[\d.]+)%/);
+      const fx = fo ? clamp(parseFloat(fo[1]) / 100, 0, 1) : 0.5, fy = fo ? clamp(parseFloat(fo[2]) / 100, 0, 1) : 0.5;
+      const imgEl = wrap.querySelector('image'), probe = new Image();
+      probe.onload = () => {
+        const k = Math.max(LW / probe.naturalWidth, LH / probe.naturalHeight);
+        const w = probe.naturalWidth * k, h = probe.naturalHeight * k;
+        imgEl.setAttribute('preserveAspectRatio', 'none');
+        imgEl.setAttribute('width', w); imgEl.setAttribute('height', h);
+        imgEl.setAttribute('x', -(w - LW) * fx); imgEl.setAttribute('y', -(h - LH) * fy);
+      };
+      probe.src = url;
+    }
     anim(wrap, [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'scale(1)' }], 70.65, 0.9);
 
     const cap = fit(s, TX.loveCaption, { cx: 960, cy: 893, w: 1066, cls: 'script', color: '#8a1a1e' });
@@ -650,12 +671,6 @@
   if (params.has('t')) state.t = clamp(parseFloat(params.get('t')) || 0, 0, DURATION);
   if (params.get('paused') === '1') state.playing = false;
 
-  const ui = document.getElementById('ui');
-  const btnPlay = document.getElementById('btnPlay');
-  const btnRestart = document.getElementById('btnRestart');
-  const btnFs = document.getElementById('btnFs');
-  const seek = document.getElementById('seek');
-  const timeEl = document.getElementById('time');
   const fmt = (v) => `${Math.floor(v / 60)}:${String(Math.floor(v % 60)).padStart(2, '0')}`;
 
   function fitStage() {
@@ -666,14 +681,15 @@
   fitStage();
 
   const PB = CFG.playback;
-  const mStart = PB.musicStart != null ? PB.musicStart : 0;   // giây bắt đầu mở nhạc
-  const mFade = PB.musicFadeIn != null ? PB.musicFadeIn : 0;  // nhỏ → to trong bao nhiêu giây
+  let mStart = PB.musicStart != null ? PB.musicStart : 0;     // giây bắt đầu mở nhạc
+  let mFade = PB.musicFadeIn != null ? PB.musicFadeIn : 0;    // nhỏ → to trong bao nhiêu giây
+  const mFrom0 = PB.musicFadeFrom != null ? PB.musicFadeFrom : 0;  // âm lượng lúc mới vào (tỉ lệ so với âm lượng chuẩn)
   const mFrom = PB.musicFrom || 0;                            // bỏ qua bao nhiêu giây đầu của bài hát
   const mVol = PB.musicVolume != null ? PB.musicVolume : 1;
   const musicVol = (t) => {
     if (!mFade) return mVol;
     const k = clamp((t - mStart) / mFade, 0, 1);
-    return mVol * k * k * (3 - 2 * k);
+    return mVol * (mFrom0 + (1 - mFrom0) * k * k * (3 - 2 * k));
   };
   let audio = null;
   if (PB.music) {
@@ -687,6 +703,15 @@
     a.volume = v.volume != null ? v.volume : (CFG.playback.voiceVolume != null ? CFG.playback.voiceVolume : 1);
     return { a, at: v.at };
   });
+  /* nhạc vào cùng lúc một giọng thoại (musicFadeWithVoice = số thứ tự trong voices, tính từ 0),
+     nhỏ → to dần suốt thời lượng của giọng đó, hết giọng thì về âm lượng chuẩn */
+  if (PB.musicFadeWithVoice != null && voices[PB.musicFadeWithVoice]) {
+    const fv = voices[PB.musicFadeWithVoice];
+    mStart = fv.at;
+    const setFade = () => { if (isFinite(fv.a.duration) && fv.a.duration > 0) mFade = fv.a.duration; };
+    setFade();
+    fv.a.addEventListener('loadedmetadata', setFade);
+  }
   const stopVoices = () => voices.forEach((v) => v.a.pause());
   const syncVoices = () => {
     stopVoices();
@@ -712,7 +737,6 @@
 
   function setPlaying(p) {
     state.playing = p;
-    btnPlay.textContent = p ? '❚❚' : '▶';
     syncAudio();
   }
   function seekTo(t) {
@@ -720,26 +744,17 @@
     render(state.t);
     syncAudio();
   }
-  btnPlay.onclick = () => setPlaying(!state.playing);
-  btnRestart.onclick = () => { seekTo(0); setPlaying(true); };
-  btnFs.onclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen());
-  seek.oninput = () => seekTo((seek.value / 1000) * DURATION);
+  /* không còn thanh điều khiển; giữ vài phím tắt: Space tạm dừng, ← → tua 5s, R chạy lại, F toàn màn hình */
   addEventListener('keydown', (e) => {
     if (e.code === 'Space') { e.preventDefault(); setPlaying(!state.playing); }
     else if (e.code === 'ArrowRight') seekTo(state.t + 5);
     else if (e.code === 'ArrowLeft') seekTo(state.t - 5);
     else if (e.key === 'r' || e.key === 'R') { seekTo(0); setPlaying(true); }
-    else if (e.key === 'f' || e.key === 'F') btnFs.onclick();
+    else if (e.key === 'f' || e.key === 'F') (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen());
   });
-  let hideTimer;
-  const showUI = () => {
-    ui.classList.remove('hide'); document.body.classList.remove('cursor-hide');
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => { ui.classList.add('hide'); document.body.classList.add('cursor-hide'); }, 2500);
-  };
-  addEventListener('mousemove', showUI);
-  addEventListener('touchstart', showUI, { passive: true });
-  document.addEventListener('pointerdown', () => { if (state.playing) syncAudio(); }, { once: true });
+  /* Trình duyệt chỉ cho phát âm thanh sau lần chạm/nhấn đầu tiên → khi đó đồng bộ lại nhạc/giọng theo thời gian hiện tại */
+  ['pointerdown', 'touchstart', 'keydown'].forEach((ev) =>
+    addEventListener(ev, () => { if (state.playing) syncAudio(); }, { once: true, passive: true }));
 
   function frame(now) {
     const dt = Math.min(0.1, (now - state.last) / 1000);
@@ -760,34 +775,11 @@
       }
     }
     render(Math.min(state.t, DURATION));
-    if (document.activeElement !== seek) seek.value = Math.round((Math.min(state.t, DURATION) / DURATION) * 1000);
-    timeEl.textContent = `${fmt(Math.min(state.t, DURATION))} / ${fmt(DURATION)}`;
     requestAnimationFrame(frame);
-  }
-
-  // Trình duyệt chặn tự phát âm thanh → nếu có âm thanh, chờ một cú nhấn rồi mới chạy từ giây 0
-  // (để không mất những giây đầu). Mở với ?t=... hoặc ?paused=1 thì bỏ qua bước này.
-  if (state.playing && (audio || voices.length) && !params.has('t')) {
-    state.playing = false;
-    const gate = el('div', '', {
-      position: 'fixed', inset: '0', zIndex: 30, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(0,0,0,.55)', color: '#fff', font: '600 22px system-ui,sans-serif', cursor: 'pointer',
-      letterSpacing: '.04em',
-    }, document.body);
-    gate.textContent = '▶  Nhấn để bắt đầu (có âm thanh)';
-    const go = () => {
-      gate.remove();
-      removeEventListener('keydown', go);
-      seekTo(0);
-      setPlaying(true);
-    };
-    gate.addEventListener('click', go);
-    addEventListener('keydown', go);
   }
 
   window.__seek = (t) => { setPlaying(false); seekTo(t); };
   window.__ready = true;
-  btnPlay.textContent = state.playing ? '❚❚' : '▶';
   document.getElementById('loading').classList.add('done');
   render(state.t);
   requestAnimationFrame((n) => { state.last = n; frame(n); });

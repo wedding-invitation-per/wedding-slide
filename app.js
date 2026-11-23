@@ -506,13 +506,12 @@
   {
     const s = scene('pair', 43.3, 48.5, { z: 7, cls: 'cream' });
     fadeIn(s, 43.3, 0.45, { ease: E.lin });
-    const a = photoSlot(s, 'pairTall', 75, 75, 778, 960);
-    const b = photoSlot(s, 'pairWide', 893, 75, 955, 597);
+    const a = photoSlot(s, 'pairTall', 0, 0, 853, 1080);   // full chiều cao, sát mép trái như các slide sau
     wipeDown(a, 43.65, 0.8, E.out);
-    wipeDown(b, 43.8, 0.8, E.out);
+    /* đã bỏ ảnh ngang phía trên; chữ phóng to và nằm chính giữa phần bên phải ảnh (tâm y = 540) */
     text(s, TX.pair, {
-      x: 893, y: 795 - 43, w: 955, align: 'center', lh: 85, ls: 0.03, color: '#5f1b1d', weight: 500,
-      fitLine: [1, 690], start: 43.7, cps: 22,
+      x: 853, y: 540 - (3 * 110) / 2, w: 1067, align: 'center', lh: 110, ls: 0.03, color: '#5f1b1d', weight: 500,
+      fitLine: [1, 880], start: 43.7, cps: 22,
     });
   }
 

@@ -135,7 +135,7 @@ window.WEDDING_CONFIG = {
     slow: 3,
     // Nhạc nền: đặt bài hát của bạn vào thư mục audio/ rồi điền đường dẫn, vd 'audio/bai-hat.mp3'
     // (hoặc một link https://). Muốn dùng nguyên âm thanh gốc của video: 'audio/original-full.mp3'
-    music: "audio/noi_gio_len.mp3",
+    music: "audio/lo_thuong_nhau.mp3",
     musicVolume: 0.6,    // âm lượng tối đa của bài hát (0–1)
     musicStart: 11.4,    // (dự phòng) giây bắt đầu mở nhạc, nếu không dùng musicFadeWithVoice
     musicFadeIn: 6,      // (dự phòng) nhỏ → to dần trong 6 giây, nếu không đọc được độ dài giọng thoại

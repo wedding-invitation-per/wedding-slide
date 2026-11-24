@@ -1,0 +1,15 @@
+{
+  "name": "html-to-mp4",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Render một trang HTML chạy theo thời gian ra MP4 (Playwright + ffmpeg)",
+  "bin": { "html-to-mp4": "render.js" },
+  "scripts": {
+    "render": "node render.js",
+    "postinstall": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.45.0"
+  },
+  "engines": { "node": ">=18" }
+}
